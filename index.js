@@ -42,12 +42,12 @@ const overviewTemplate = fs.readFileSync(
   "utf-8"
 );
 
-const overviewCard = fs.readFileSync(
+const cardTemplate = fs.readFileSync(
   `${__dirname}/templates/template-card.html`,
   "utf-8"
 );
 
-const overviewProduct = fs.readFileSync(
+const productTemplate = fs.readFileSync(
   `${__dirname}/templates/template-product.html`,
   "utf-8"
 );
@@ -76,7 +76,7 @@ const server = http.createServer((req, res) => {
   if (pathname === "/" || pathname === "/overview") {
     const output = dataObj
       .map((data) => {
-        return replaceTemplate(overviewCard, data);
+        return replaceTemplate(cardTemplate, data);
       })
       .join("");
     const overview = overviewTemplate.replace("{%PRODUCT_CARDS%}", output);
@@ -85,7 +85,12 @@ const server = http.createServer((req, res) => {
     });
     res.end(overview);
   } else if (pathname === "/products") {
-    res.end("Products");
+    const product = dataObj[query.id];
+    const output = replaceTemplate(productTemplate, product);
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+    });
+    res.end(output);
   } else if (pathname === "/api") {
     res.writeHead(200, {
       "Content-Type": "application/json",
