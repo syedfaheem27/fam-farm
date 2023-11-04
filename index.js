@@ -1,7 +1,7 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
-
+const replaceTemplate = require("./modules/replaceTemplate");
 //FILE Reading and Writing
 
 //Synchronous file reading and writing
@@ -52,24 +52,6 @@ const productTemplate = fs.readFileSync(
   "utf-8"
 );
 
-const replaceTemplate = (input, data) => {
-  let output = input.replace(/{%PRODUCT_IMAGE%}/g, data.image);
-  output = output.replace(/{%PRODUCT_NAME%}/g, data.productName);
-  output = output.replace(/{%PRODUCT_QUANTITY%}/g, data.quantity);
-  output = output.replace(/{%PRODUCT_PRICE%}/g, data.price);
-  output = output.replace(/{%ID%}/g, data.id);
-  output = output.replace(/{%PRODUCT_LOCATION%}/g, data.from);
-  output = output.replace(/{%PRODUCT_NUTRIENTS%}/g, data.nutrients);
-  output = output.replace(/{%PRODUCT_DESCRIPTION%}/g, data.description);
-
-  if (!data.organic) {
-    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
-  } else {
-    output = output.replace(/{%NOT_ORGANIC%}/g, "");
-  }
-
-  return output;
-};
 const server = http.createServer((req, res) => {
   const { pathname, query } = url.parse(req.url, true);
 
